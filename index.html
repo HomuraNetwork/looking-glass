@@ -31,11 +31,10 @@
                                         class="mt-1 block w-full px-3 py-2  border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         <option value="NONE">Select</option>
                                         <option
-                                            value="https://HK-1.lg.homura.network:8080">HK-1</option>
+                                            value="https://HK-1.lg.homura.network">HK-1</option>
                                         <option
-                                            value="https://HK-2.lg.homura.network:8080">HK-2</option>
-                                            <option
-                                            value="http://localhost:8080">LOCALTEST</option>
+                                            value="https://HK-2.lg.homura.network">HK-2</option>
+                                            
                                     </select>
 
                                 </div>
@@ -377,7 +376,7 @@ displayResults(rttResultsPublic, "rttResultsPublic");
 
         <script>
    function updatePageInfo() {
-    fetch(node_url + '/info')
+    fetch(node_url + '/info', { mode: 'no-cors' })
         .then(response => response.json())
         .then(data => {
             
@@ -398,7 +397,7 @@ displayResults(rttResultsPublic, "rttResultsPublic");
             }
         })
         .catch(error => console.error('Error:', error));
-        fetch(node_url + '/intro')
+        fetch(node_url + '/intro', { mode: 'no-cors' })
         .then(response => response.text())
         .then(markdownText => {
             const introElement = document.getElementById('intro');
