@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/utilities.min.css" integrity="sha512-Y8cJYgNbd3VacNNezxAdncUu75Uj7uR/Dtb4ffepQrtFww5/QlgYt2IwexMwB8/SZWCCVe6kOY20A2Q4zQf5vQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" integrity="sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js" integrity="sha512-oSA0PdOBsyP4Cv5rIHOWhOr+H0ZPOE/L8UKaX33DjBFD+TrWOZZfewjg85Z7WhNPkQrHeTKOYSio/XM6FBPhWA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <title>Network Looking Glass</title>
+    </head>
+
+    <body class="bg-pink-100">
+        <main>
+            <script>
+        var node_url = 'http://localhost:8080'; 
+        var public_204 = 'https://cp.cloudflare.com';
+
+    </script>
+            <section class="py-8 px-8 lg:py-16">
+                <div class="container gap-3 mx-auto">
+                    <div class="grid gap-3 md:grid-cols-1 lg:grid-cols-2">
+                        <div
+                            class="rounded-xl bg-white border-4  border-gray-100 p-6">
+                            <h2 class="text-2xl font-bold mb-6">Information</h2>
+
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-10 gap-4 mb-6">
+                                <div class="md:col-span-7">
+                                    <label
+                                        class="text-gray-600 font-medium">Datacenter</label>
+                                    <select id="locationSelect"
+                                        class="mt-1 block w-full px-3 py-2  border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <option value="NONE">Select</option>
+                                        <option
+                                            value="https://HK-1.lg.homura.network:8080">HK-1</option>
+                                        <option
+                                            value="https://HK-2.lg.homura.network:8080">HK-2</option>
+                                            <option
+                                            value="http://localhost:8080">LOCALTEST</option>
+                                    </select>
+
+                                </div>
+                                <div class="md:col-span-3">
+                                    <label
+                                        class="text-gray-600 font-medium">Test
+                                        IPv4</label>
+                                    <input id="ipv4Addr" type="text"
+                                        class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        value readonly>
+                                </div>
+                                <div class="ipv6 md:col-span-5">
+                                    <label
+                                        class="text-gray-600 font-medium">Test
+                                        IPv6</label>
+                                    <input id="ipv6Addr" type="text"
+                                        class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        value readonly>
+                                </div>
+                                <div class="md:col-span-5">
+                                    <label
+                                        class="text-gray-600 font-medium">Your
+                                        IP</label>
+                                    <input id="VisitorIP" type="text"
+                                        class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        value
+                                        readonly>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-5"><label
+                                    class="text-gray-600 font-medium">Test
+                                    Files(ipv4)</label>
+                                <div
+                                    class="inline-flex rounded-md shadow-sm w-full mt-3 mb-3"
+                                    role="group">
+
+                                    <a type="button" id="ipv4-100MB"
+                                        class="text-center w-1/2 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                        100MB
+                                    </a>
+                                    <a type="button" id="ipv4-1000MB"
+                                        class="text-center w-1/2 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                        1000MB
+                                    </a>
+                                </div> </div>
+                            <div class="ipv6 md:col-span-5"><label
+                                    class="text-gray-600 font-medium">Test
+                                    Files(ipv6)</label>
+                                <div
+                                    class="inline-flex rounded-md shadow-sm w-full mt-3"
+                                    role="group">
+
+                                    <a type="button" id="ipv6-100MB"
+                                        class="text-center w-1/2 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                        100MB
+                                    </a>
+                                    <a type="button" id="ipv6-1000MB"
+                                        class="text-center w-1/2 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                        1000MB
+                                    </a>
+                                </div> </div>
+                        </div>
+
+                        <div
+                            class="rounded-xl bg-white border-4  border-gray-100 p-6">
+
+                            <div class="col-span-1 md:col-span-2">
+                                <h2
+                                class="text-xl font-semibold mb-4">Intro</h2>
+                                <div
+                                    class=" py-2 px-4 mt-1"
+                                    id="intro"></div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex-col rounded-xl border-4  border-gray-100 bg-white">
+                            <div class="p-6 ">
+                                <h2
+                                    class="text-xl font-semibold mb-4">Tools</h2>
+                                <div>
+                                    <label for="target"
+                                        class="sr-only block text-sm font-medium leading-6 text-gray-900">IP/Domain:</label>
+                                    <div
+                                        class="relative mt-2 rounded-md shadow-sm">
+                                        <input type="text" required
+                                            name="target" id="target"
+                                            class="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            placeholder="Enter IP or Domain">
+                                        <div
+                                            class="absolute inset-y-0 right-0 flex items-center">
+                                            <label for="ipversion"
+                                                class="sr-only">IP
+                                                Version</label>
+                                            <select id="ipversion"
+                                                name="ipversion"
+                                                class="h-full rounded-md border-0 bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                                                <option value="ipv4"
+                                                    selected>IPv4</option>
+                                                <option class="ipv6"
+                                                    value="ipv6">IPv6</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="inline-flex rounded-md shadow-sm w-full mt-3"
+                                    role="group">
+                                    <button type="button"
+                                        onclick="sendCommand('ping')"
+                                        class="w-1/4 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                        Ping
+                                    </button>
+                                    <button type="button"
+                                        onclick="sendCommand('mtr')"
+                                        class="w-1/4  px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                        MTR
+                                    </button>
+                                    <button type="button"
+                                        onclick="sendCommand('traceroute')"
+                                        class="w-1/4  px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                        Traceroute
+                                    </button>
+                                    <button type="button"
+                                        onclick="sendCommand('nexttrace')"
+                                        class="w-1/4 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                                        Nexttrace
+                                    </button>
+                                </div>
+
+                                <h3
+                                    class="mt-6 sr-only text-gray-700">Output:</h3>
+                                <pre id="output"
+                                    class="font-mono text-xs whitespace-pre-wrap overflow-y-scroll h-80 max-h-80 bg-black text-green-400 p-4 border border-green-400 mt-2 p-2  rounded-lg ">...</pre>
+
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex-col rounded-xl bg-white border-4  border-gray-100 bg-white p-6 ">
+                            <h2 class="text-xl font-semibold mb-4">RTT Test</h2>
+
+                            <button id="startTest"
+                                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300">Start
+                                Test</button>
+                            <button id="stopTest"
+                                class="bg-gray-300 text-gray-600 font-semibold px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                disabled>Stop Test</button>
+
+                            <div id="rttResultsLocal" class="mt-4"></div>
+
+                            <div id="rttResultsPublic"></div>
+
+                            <canvas id="rttChart"
+                                class="mt-4 max-h-80"></canvas>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            var ws = null;
+            function scrollToBottom() {
+        var output = document.getElementById('output');
+        output.scrollTop = output.scrollHeight;
+    }
+            function openWebSocket() {
+                if (ws !== null) {
+                
+            ws.close(1000, "Closing connection normally");
+        }
+        ws = new WebSocket(node_url.replace(/^http/, 'ws') + '/lg_backend'); 
+    
+        
+        ws.onmessage = function(event) {
+        var output = document.getElementById('output');
+        output.textContent += event.data + '\n';
+        scrollToBottom(); 
+    };
+                ws.onclose = function(event) {
+                    if (!event.wasClean) {
+                        console.error('WebSocket closed unexpectedly');
+                    }
+                };
+        
+                ws.onerror = function(error) {
+                    console.error('WebSocket error:', error);
+                };
+            }
+        
+            function sendCommand(commandType) {
+                var target = document.getElementById('target').value;
+                var ipversion = document.getElementById('ipversion').value;
+
+                if (target == "") {
+                    document.getElementById('output').textContent = 'Please enter IP or Domain';
+                    return;
+                }
+
+                //var count = document.getElementById('count').value;
+                var count = 5;
+                document.getElementById('output').textContent = '';
+                openWebSocket(); 
+        
+                var cmd = {
+                    type: commandType,
+                    ipver: ipversion,
+                    target: target,
+                    count: parseInt(count)
+                };
+        
+                
+                ws.onopen = function() {
+                    ws.send(JSON.stringify(cmd));
+                };
+            }
+        </script>
+        <script>
+                  
+        let rttResultsLocal = [];
+              let rttResultsPublic = [];
+              let testInterval;
+              const maxTests = 20;
+              let stopRequested = false;
+              let chart = null;
+      
+              document.getElementById("startTest").addEventListener("click", startTest);
+              document.getElementById("stopTest").addEventListener("click", stopTest);
+              setupChart();
+      
+              function startTest() {
+                  rttResultsLocal = [];
+                  rttResultsPublic = [];
+                  stopRequested = false;
+                  this.disabled = true;
+                  document.getElementById("stopTest").disabled = false;
+                  testInterval = setInterval(runRttTest, 1000);
+                  resetChart();
+              }
+      
+              function stopTest() {
+                  stopRequested = true;
+                  this.disabled = true;
+              }
+      
+              async function runRttTest() {
+                  await testRTT(node_url + "/generate_204" , rttResultsLocal);
+                  await testRTT(public_204, rttResultsPublic);
+                  displayResults(rttResultsLocal, "rttResultsLocal");
+displayResults(rttResultsPublic, "rttResultsPublic");
+
+                  if (stopRequested || rttResultsLocal.length >= maxTests) {
+                      clearInterval(testInterval);
+                      displayResults();
+                      document.getElementById("startTest").disabled = false;
+                  }
+              }
+      
+              async function testRTT(url, resultsArray) {
+          const startTime = performance.now();
+          await fetch(url, { mode: 'no-cors' }); 
+          const endTime = performance.now();
+          const rtt = endTime - startTime;
+          resultsArray.push(rtt);
+          updateChart(url === node_url + "/generate_204" ? 0 : 1, resultsArray.length, rtt);
+      }
+      
+      
+              function displayResults() {
+                  
+                  const maxLocal = Math.max(...rttResultsLocal).toFixed(2);
+                  const minLocal = Math.min(...rttResultsLocal).toFixed(2);
+                  const avgLocal = (rttResultsLocal.reduce((a, b) => a + b, 0) / rttResultsLocal.length).toFixed(2);
+      
+                  const maxPublic = Math.max(...rttResultsPublic).toFixed(2);
+                  const minPublic = Math.min(...rttResultsPublic).toFixed(2);
+                  const avgPublic = (rttResultsPublic.reduce((a, b) => a + b, 0) / rttResultsPublic.length).toFixed(2);
+      
+                  document.getElementById("rttResultsLocal").textContent = `Local - Max: ${maxLocal} ms, Min: ${minLocal} ms, Avg: ${avgLocal} ms`;
+                  document.getElementById("rttResultsPublic").textContent = `Public - Max: ${maxPublic} ms, Min: ${minPublic} ms, Avg: ${avgPublic} ms`;
+              }
+      
+      function setupChart() {
+                  const ctx = document.getElementById('rttChart').getContext('2d');
+                  chart = new Chart(ctx, {
+                      type: 'line',
+                      data: {
+                          labels: [],
+                          datasets: [
+                              {
+                                  label: 'Looking glass 204 RTT (ms)',
+                                  data: [],
+                                  backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                                  borderColor: 'rgba(0, 123, 255, 1)',
+                                  borderWidth: 1
+                              },
+                              {
+                                  label: 'Public 204 RTT (ms)',
+                                  data: [],
+                                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                                  borderColor: 'rgba(255, 99, 132, 1)',
+                                  borderWidth: 1
+                              }
+                          ]
+                      },
+                      options: {
+                          scales: {
+                              y: {
+                                  beginAtZero: true
+                              }
+                          }
+                      }
+                  });
+              }
+      
+              function updateChart(datasetIndex, label, data) {
+          
+          if (datasetIndex === 0) {
+              chart.data.labels.push(label);
+          }
+      
+          chart.data.datasets[datasetIndex].data.push(data);
+          chart.update();
+      }
+      
+          function resetChart() {
+              chart.data.labels = [];
+              chart.data.datasets.forEach((dataset) => {
+                  dataset.data = [];
+              });
+              chart.update();
+          }
+      
+      
+              </script>
+
+        <script>
+   function updatePageInfo() {
+    fetch(node_url + '/info')
+        .then(response => response.json())
+        .then(data => {
+            
+            document.getElementById('ipv4Addr').value = data.IPv4Addr;
+            document.getElementById('ipv6Addr').value = data.IPv6Addr;
+            document.getElementById('VisitorIP').value = data.VisitorIP;
+
+            
+            document.getElementById('ipv4-100MB').href = data.IPv4URL + data['100M'];
+            document.getElementById('ipv4-1000MB').href = data.IPv4URL + data['1000M'];
+
+            if (data.IPv6Addr) {
+                document.getElementById('ipv6-100MB').href = data.IPv6URL + data['100M'];
+                document.getElementById('ipv6-1000MB').href = data.IPv6URL + data['1000M'];
+            } else {
+                
+                document.querySelectorAll('.ipv6').forEach(el => el.style.display = 'none');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        fetch(node_url + '/intro')
+        .then(response => response.text())
+        .then(markdownText => {
+            const introElement = document.getElementById('intro');
+            const htmlContent = marked.parse(markdownText);
+            introElement.innerHTML = htmlContent;
+        })
+        .catch(error => console.error('Error fetching intro.md:', error));
+
+
+}
+
+</script>
+
+        <script>
+  
+    
+    const locationSelect = document.getElementById('locationSelect');
+
+    
+    locationSelect.addEventListener('change', function() {
+        
+        node_url = locationSelect.value;
+
+        updatePageInfo();
+    });
+
+
+</script>
+    </body>
+
+</html>
