@@ -291,7 +291,7 @@
         if (ws !== null) {
           ws.close(1000, 'Closing connection normally')
         }
-        ws = new WebSocket(node_url.replace(/^http/, 'ws') + '/lg_backend');
+        ws = new WebSocket(node_url.replace(/^http(s)?:\/\//, 'ws$1://').replace(/\/$/, '') + '/lg_backend');
 
         ws.onmessage = function (event) {
           var output = document.getElementById('output')
