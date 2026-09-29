@@ -1,0 +1,23 @@
+name: hlg-agent
+
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hlg-agent:local
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+    ports:
+      # Change the host endpoint without changing the internal TLS listener.
+      - "${LG_AGENT_PORT:-443}:443"
+    environment:
+      # Only used on first boot; later boots use the stored node identity.
+      LG_INIT_STRING: "${LG_INIT_STRING:-}"
+    volumes:
+      - type: bind
+        source: ${LG_AGENT_DATA_DIR:-./data}
+        target: /var/lib/hlg
+    restart: unless-stopped

@@ -1,0 +1,42 @@
+# Preserve the original worker/docker-compose.yml project name so existing
+# worker_lg-data volumes remain attached after moving this file.
+name: worker
+
+services:
+  looking-glass:
+    build:
+      # Build context is the repository root (the image needs the workspace
+      # lockfile, controller, frontend, and agent sources).
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Build identity for the agent binaries; must be the commit that last
+        # touched agent/ (see Dockerfile). Compose cannot run git, so it
+        # is passed in: LG_BUILD_ID=$(git log -1 --format=%h -- agent) docker compose up --build
+        LG_BUILD_ID: ${LG_BUILD_ID:-unknown}
+    image: hlg-controller:local
+    ports:
+      # Bind to loopback by default. When LG_TRUST_PROXY=1 the origin must only
+      # be reachable by the trusted proxy, or a direct client can forge the
+      # client IP. Keep this if your reverse proxy runs on the same host; change
+      # it to "8787:8787" only to expose the origin directly (and leave
+      # LG_TRUST_PROXY unset in that case).
+      - "127.0.0.1:${LG_PORT:-8787}:8787"
+    volumes:
+      # Persist the SQLite database across restarts.
+      - lg-data:/var/lib/hlg
+    environment:
+      LG_PORT: "8787"
+      LG_DB_PATH: /var/lib/hlg/looking-glass.sqlite
+      # Cron schedule for the background pass (5-field cron, same syntax as the
+      # Cloudflare crons trigger). "none" disables it.
+      LG_SCHEDULE_CRON: "${LG_SCHEDULE_CRON:-*/30 * * * *}"
+      LG_PUBLIC_ORIGIN: "${LG_PUBLIC_ORIGIN:-}"
+      LG_TRUST_PROXY: "${LG_TRUST_PROXY:-}"
+      LG_TRUST_PROXY_HOPS: "${LG_TRUST_PROXY_HOPS:-1}"
+      LG_TRUST_PROXY_HEADER: "${LG_TRUST_PROXY_HEADER:-}"
+      LG_TRUSTED_PROXY_CIDRS: "${LG_TRUSTED_PROXY_CIDRS:-}"
+    restart: unless-stopped
+
+volumes:
+  lg-data:

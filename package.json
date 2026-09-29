@@ -1,0 +1,16 @@
+{
+  "name": "looking-glass",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -C controller build",
+    "build:iperf3": "pnpm -C controller build:iperf3:all",
+    "deploy:cf": "pnpm -C controller deploy:cf",
+    "dev:local": "bash scripts/dev-local.sh",
+    "smoke:local": "bash scripts/smoke-local.sh",
+    "test": "pnpm -C controller test && pnpm -C controller/frontend test && go -C agent test ./...",
+    "typecheck": "pnpm -C controller typecheck && pnpm -C controller typecheck:local && pnpm -C controller/frontend typecheck && go -C agent vet ./...",
+    "build:cf": "pnpm -C controller build:cf"
+  },
+  "packageManager": "pnpm@12.7.0"
+}

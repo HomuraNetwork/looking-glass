@@ -1,0 +1,8 @@
+packages:
+  - controller
+  - controller/frontend
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true

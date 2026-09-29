@@ -1,0 +1,6 @@
+# Deny everything by default; whitelist only what the Go build needs.
+*
+!go.mod
+!go.sum
+!cmd/
+!internal/

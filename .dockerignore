@@ -1,0 +1,19 @@
+# Build context for the controller image is the repository root.
+.git
+.github
+.vscode
+.local
+.agents
+.codex
+.env*
+**/.env*
+.dev.vars*
+**/.dev.vars*
+agent/data
+node_modules
+**/node_modules
+**/dist
+controller/wrangler.jsonc
+scripts
+*.log
+**/*.sqlite

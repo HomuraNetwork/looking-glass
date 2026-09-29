@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "__WORKER_NAME__",
+  "main": "./src/index.ts",
+  "compatibility_date": "2026-09-21",
+  // Node.js compatibility (nodejs_compat + nodejs_compat_v2) is enabled by
+  // default for compatibility dates >= 2026-08-04, so the flags are omitted
+  // deliberately — adding them is redundant and wrangler ignores them.
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "triggers": {
+    // Rendered from WORKER_CRONS (comma-separated; "none" disables). The
+    // scheduled pass runs retention, ACME renewal, certificate nudges and the
+    // availability sweep, so disabling it means no automatic renewal.
+    "crons": __WORKER_CRONS__
+  },
+  "assets": {
+    "directory": "frontend/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/_lg/*", "/", "/**", "!/assets/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "__D1_NAME__",
+      "database_id": "__D1_DATABASE_ID__"
+      // Schema migrations are applied by the runtime itself (admin db/init on
+      // Cloudflare, startup on the local runtime), tracked in the
+      // schema_migrations table. Do NOT add migrations_dir here and do NOT run
+      // `wrangler d1 migrations apply` against an existing database: wrangler
+      // keeps its own tracking table and would replay ALTER statements that
+      // have already been applied.
+    }
+  ]
+}

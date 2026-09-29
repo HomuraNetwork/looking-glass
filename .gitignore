@@ -1,0 +1,43 @@
+# Go build/test artifacts
+bin/
+*.test
+coverage.out
+
+# TypeScript / JavaScript build output and dependencies
+node_modules/
+.pnpm-store/
+dist/
+build/
+*.tsbuildinfo
+
+# Generated files
+controller/src/db-schema.ts
+
+# Wrangler (rendered config + local state)
+controller/wrangler.jsonc
+.wrangler/
+
+# Local D1 / wrangler secrets. Committed examples are re-included below.
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# Environment files with real credentials. Committed examples are re-included.
+.env
+.env.*
+!.env.local.example
+!.env.cloudflare.example
+
+# Logs
+*.log
+
+# Local tooling / editor / agent state
+.devcontainer/
+.vscode/
+.agents/
+.codex/
+skills-lock.json
+
+# Local runtime state (dev stack, SQLite database, logs)
+.local/
+agent/data/

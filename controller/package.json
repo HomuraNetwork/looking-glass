@@ -1,0 +1,33 @@
+{
+  "name": "hlg-controller",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/generate-db-schema.mjs && vitest run test/*.test.ts local/*.test.ts",
+    "typecheck": "node scripts/generate-db-schema.mjs && tsc --noEmit",
+    "build": "node scripts/generate-db-schema.mjs && tsc --noEmit && pnpm --dir frontend build && node scripts/build-agent-artifacts.mjs",
+    "build:iperf3": "node scripts/build-iperf3.mjs",
+    "build:iperf3:all": "node scripts/build-iperf3.mjs --all",
+    "wrangler:config": "node scripts/write-wrangler-config.mjs",
+    "deploy:cf": "node scripts/write-wrangler-config.mjs && node scripts/deploy.mjs",
+    "agent:artifacts": "node scripts/build-agent-artifacts.mjs",
+    "dev": "pnpm build",
+    "build:local": "node scripts/generate-db-schema.mjs && tsc -p local/tsconfig.json && node scripts/build-local.mjs",
+    "typecheck:local": "node scripts/generate-db-schema.mjs && tsc -p local/tsconfig.json",
+    "start:local": "node local/dist/server.cjs",
+    "build:cf": "pnpm build && pnpm build:iperf3:all"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260926.1",
+    "@types/node": "^26.6.3",
+    "@types/ws": "^8.18.1",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2",
+    "wrangler": "4.141.0"
+  },
+  "dependencies": {
+    "jose": "^6.2.12",
+    "ws": "^8.21.3"
+  }
+}
