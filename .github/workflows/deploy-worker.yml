@@ -2,6 +2,9 @@ name: Deploy Worker
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 concurrency:
   group: deploy-worker-${{ github.ref }}
