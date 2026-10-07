@@ -21,11 +21,12 @@ describe("iperf3 fallback assets", () => {
     const index = await handleDepsRequest(new Request("https://lg.example/deps/manifest.json"), env, async () => upstream);
     const data = await index.json() as { version: number; static: Array<{ name: string; sha256: string }>; upstream: Array<{ name: string; url: string; sha256: string }> };
     expect(data.version).toBe(2);
-    expect(data.static).toEqual([{ name, tool: "iperf3", arch: "amd64", sha256: "a".repeat(64), size: 6, url: `/deps/${name}` }]);
+    expect(data.static).toEqual([{ name, tool: "iperf3", arch: "amd64", sha256: "a".repeat(64), size: 6, url: `/deps/${name}`, license_url: "/THIRD_PARTY_LICENSES.txt" }]);
     expect(data.upstream).toEqual(upstream.map((entry) => ({ ...entry, url: `https://github.com/nxtrace/NTrace-core/releases/download/v1.7.3/${entry.name}` })));
     const binary = await handleDepsRequest(new Request(`https://lg.example/deps/${name}`), env);
     expect(binary.status).toBe(200);
     expect(await binary.text()).toBe("binary");
+    expect(binary.headers.get("link")).toBe('</THIRD_PARTY_LICENSES.txt>; rel="license"');
     expect((await handleDepsRequest(new Request("https://lg.example/deps/hlg-mtr-linux-amd64"), env)).status).toBe(404);
   });
 

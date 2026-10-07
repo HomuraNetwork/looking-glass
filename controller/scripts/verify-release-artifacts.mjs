@@ -23,17 +23,25 @@ function verifyBinary(path, entry, expectedName, expectedMachine) {
   if (entry?.sha256 !== sha256 || entry?.size_bytes !== bytes.length) {
     throw new Error(`${expectedName} does not match its manifest`);
   }
+  return bytes;
 }
 
 export function verifyReleaseArtifacts(dist) {
   readFileSync(resolve(dist, "index.html"));
+  const notices = readFileSync(resolve(dist, "THIRD_PARTY_LICENSES.txt"), "utf8");
+  if (!notices.includes("=== HLG ===") || !notices.includes("Copyright (c) 2023 shadcn") || !notices.includes("=== iPerf3 ===")) {
+    throw new Error("distribution license notices are incomplete");
+  }
 
   const agentDir = resolve(dist, "_agent");
   const agent = readManifest(resolve(agentDir, "manifest.json"));
   if (typeof agent.build_id !== "string" || !agent.build_id) throw new Error("agent release manifest has no build_id");
   for (const [name, machine] of [[AGENTS[0], 62], [AGENTS[1], 183]]) {
     const entry = agent.targets?.find((target) => target.name === name);
-    verifyBinary(resolve(agentDir, name), entry, name, machine);
+    const bytes = verifyBinary(resolve(agentDir, name), entry, name, machine);
+    if (!bytes.includes(Buffer.from("=== HLG ===")) || !bytes.includes(Buffer.from("=== Go runtime and standard library"))) {
+      throw new Error(`${name} has no embedded license notices`);
+    }
   }
 
   const depsDir = resolve(dist, "_deps");
@@ -42,6 +50,7 @@ export function verifyReleaseArtifacts(dist) {
     const name = `hlg-iperf3-linux-${arch}`;
     const entry = deps.tools?.[name];
     if (entry?.tool !== "iperf3" || entry.arch !== arch) throw new Error(`${name} has an invalid manifest entry`);
+    if (entry.license_url !== "/THIRD_PARTY_LICENSES.txt") throw new Error(`${name} has no distribution license URL`);
     verifyBinary(resolve(depsDir, name), entry, name, machine);
   }
 }

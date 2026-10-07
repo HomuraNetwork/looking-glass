@@ -38,6 +38,7 @@ import (
 	"hlg/internal/initstring"
 	"hlg/internal/iperf"
 	"hlg/internal/keyset"
+	"hlg/internal/licenses"
 	"hlg/internal/logging"
 	"hlg/internal/probe"
 	"hlg/internal/runtime"
@@ -402,6 +403,13 @@ func main() {
 		return
 	case "version":
 		fmt.Printf("%s (%s)\n", runtime.Version, runtime.BuildID)
+		return
+	case "licenses":
+		text, err := licenses.Text()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Print(text)
 		return
 	case "help":
 		usage()
@@ -2455,6 +2463,7 @@ Usage (a bare hlg-agent prints this help):
   hlg-agent doctor
   hlg-agent uninstall
   hlg-agent version
+  hlg-agent licenses
 `)
 }
 

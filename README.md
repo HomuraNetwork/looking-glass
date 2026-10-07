@@ -383,3 +383,18 @@ The Controller can run on Cloudflare Workers with D1 or in Docker with SQLite.
 The Agent runs on the network node. It executes Ping, Traceroute, MTR, NextTrace, iPerf3, and download tests, and handles TLS, configuration synchronization, heartbeats, and updates.
 
 One Controller can manage Agents across multiple locations, networks, and providers. See the [Agent documentation](agent/README.md) for implementation and operational details.
+
+## License
+
+HLG's original code is licensed under the [MIT License](LICENSE).
+Third-party code retains its upstream licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+Builds generate `frontend/dist/THIRD_PARTY_LICENSES.txt` under the Controller,
+served at `/THIRD_PARTY_LICENSES.txt`. It contains the frontend/Controller
+runtime dependency notices and, when distributed, the complete upstream iPerf3
+LICENSE from its pinned source build. The iPerf3 download manifest and response
+headers link to these notices.
+
+The Agent embeds HLG's MIT license and its linked Go dependency/runtime notices;
+run `hlg-agent licenses` to read them. Generated license files are build outputs
+and are not committed.

@@ -36,7 +36,9 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: iperf3-${{ matrix.arch }}
-          path: controller/frontend/dist/_deps/hlg-iperf3-linux-${{ matrix.arch }}
+          path: |
+            controller/frontend/dist/_deps/hlg-iperf3-linux-${{ matrix.arch }}
+            controller/build/iperf3-LICENSE-${{ matrix.arch }}.txt
 
   deploy:
     needs: iperf3
@@ -90,7 +92,9 @@ jobs:
         with:
           pattern: iperf3-*
           merge-multiple: true
-          path: controller/frontend/dist/_deps
+          # The upload's common root is controller/: restore binaries and the
+          # build-only license input before generating the distribution notices.
+          path: controller
 
       - name: Verify and index iperf3 binaries
         run: |

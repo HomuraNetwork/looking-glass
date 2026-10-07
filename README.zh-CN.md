@@ -383,3 +383,16 @@ Controller 可以运行在 Cloudflare Workers + D1，或 Docker + SQLite 上。
 Agent 部署在实际网络节点上，负责执行 Ping、Traceroute、MTR、NextTrace、iPerf3 和下载测速，并处理 TLS、配置同步、心跳和更新。
 
 一个 Controller 可以统一管理多个地区、网络和运营商下的 Agent 节点。更多实现和运维说明请参阅 [Agent 中文文档](agent/README.zh-CN.md)。
+
+## 许可证
+
+HLG 自有代码使用 [MIT License](LICENSE)。
+第三方代码保留各自上游许可证，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+构建时在 Controller 的 `frontend/dist/THIRD_PARTY_LICENSES.txt` 中生成前端和
+Controller 运行依赖的完整声明，发布后可通过 `/THIRD_PARTY_LICENSES.txt` 访问。
+分发 iPerf3 时，文件也包含同一份固定版本源码包中的完整 LICENSE；iPerf3 下载
+manifest 和响应头会指向这些声明。
+
+Agent 内嵌 HLG 的 MIT 和实际链接的 Go 依赖、运行时声明，使用
+`hlg-agent licenses` 查看。生成的许可证文件属于构建产物，不提交到仓库。

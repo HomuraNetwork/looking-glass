@@ -324,10 +324,15 @@ hlg-agent run --log-file /var/log/hlg-agent.log
 
 ```bash
 cd agent
+go generate ./internal/licenses
 CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o hlg-agent ./cmd/hlg-agent
 ```
 
 交叉编译：
+
+先执行上面的生成步骤。它收集两个 Linux 发布目标实际链接的 Go 运行时和依赖的
+完整声明；生成的源码已被 Git 忽略，发布脚本和 Docker 构建会自动执行该步骤。
+`hlg-agent licenses` 可以直接输出内嵌声明，无需配置文件、联网或 root 权限。
 
 ```bash
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
@@ -364,4 +369,5 @@ sudo hlg-agent uninstall
 | `hlg-agent upgrade` | 检查或安装 Agent 更新 |
 | `hlg-agent uninstall` | 卸载 Agent |
 | `hlg-agent version` | 显示版本和 Build ID |
+| `hlg-agent licenses` | 输出 HLG 的 MIT 和链接的 Go 依赖、运行时声明 |
 | `hlg-agent help` | 显示命令帮助 |

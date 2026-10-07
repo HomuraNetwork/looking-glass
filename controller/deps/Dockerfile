@@ -4,7 +4,9 @@ FROM debian:bookworm AS build
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential ca-certificates curl && rm -rf /var/lib/apt/lists/*
 COPY controller/deps/build-iperf3.sh /usr/local/bin/build-iperf3
+COPY controller/deps/write-libc-notices.sh /usr/local/bin/write-libc-notices.sh
 RUN sh /usr/local/bin/build-iperf3
 
 FROM scratch AS artifact
 COPY --from=build /out/iperf3 /iperf3
+COPY --from=build /out/iperf3-LICENSE.txt /iperf3-LICENSE.txt

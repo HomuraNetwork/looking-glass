@@ -3,6 +3,7 @@ import { json, methodNotAllowed, notFound } from "./http";
 import { fetchNexttraceRelease, type NexttraceReleaseAsset } from "./nexttrace-release";
 
 const ALLOWED = /^hlg-iperf3-linux-(amd64|arm64)$/;
+const LICENSE_URL = "/THIRD_PARTY_LICENSES.txt";
 interface Entry { tool: string; arch: string; sha256: string; size_bytes: number }
 
 export async function handleDepsRequest(request: Request, env: Env, getRelease: () => Promise<NexttraceReleaseAsset[]> = fetchNexttraceRelease): Promise<Response> {
@@ -25,7 +26,7 @@ export async function handleDepsRequest(request: Request, env: Env, getRelease: 
     const entries = data?.tools && typeof data.tools === "object" && !Array.isArray(data.tools) ? data.tools : {};
     const files = Object.entries(entries)
       .filter(([file, entry]) => ALLOWED.test(file) && entry?.tool === "iperf3" && /^(amd64|arm64)$/.test(entry.arch) && /^[a-f0-9]{64}$/i.test(entry.sha256) && Number.isSafeInteger(entry.size_bytes) && entry.size_bytes > 0)
-      .map(([file, entry]) => ({ name: file, tool: entry!.tool, arch: entry!.arch, sha256: entry!.sha256, size: entry!.size_bytes, url: `/deps/${file}` }));
+      .map(([file, entry]) => ({ name: file, tool: entry!.tool, arch: entry!.arch, sha256: entry!.sha256, size: entry!.size_bytes, url: `/deps/${file}`, license_url: LICENSE_URL }));
 
     let upstream: NexttraceReleaseAsset[] = [];
     try {
@@ -59,6 +60,7 @@ export async function handleDepsRequest(request: Request, env: Env, getRelease: 
   headers.set("cache-control", "no-store");
   headers.set("x-content-type-options", "nosniff");
   headers.set("content-type", "application/octet-stream");
+  headers.set("link", `<${LICENSE_URL}>; rel="license"`);
   return new Response(request.method === "HEAD" ? null : response.body, { status: 200, headers });
 }
 

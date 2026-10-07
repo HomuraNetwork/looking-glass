@@ -1,9 +1,10 @@
 {
   "name": "hlg-controller",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node scripts/generate-db-schema.mjs && vitest run test/*.test.ts local/*.test.ts",
+    "test": "node scripts/generate-db-schema.mjs && vitest run test/*.test.ts local/*.test.ts && node --test scripts/build-licenses.test.mjs scripts/libc-notices.test.mjs",
     "typecheck": "node scripts/generate-db-schema.mjs && tsc --noEmit",
     "build": "node scripts/generate-db-schema.mjs && tsc --noEmit && pnpm --dir frontend build && node scripts/build-agent-artifacts.mjs",
     "build:iperf3": "node scripts/build-iperf3.mjs",

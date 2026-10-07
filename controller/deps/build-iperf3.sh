@@ -1,5 +1,6 @@
 #!/bin/sh
 set -eu
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
 # Pinned release and SHA-256 from https://software.es.net/iperf/news.html.
 version=3.21
@@ -29,10 +30,27 @@ case "$(uname -m):${target}" in
     set -- "--host=${triple}"
     ;;
 esac
+# Record the library selected by the same compiler that configure will use.
+# This is a packaged static archive, not a glibc source build.
+libc_archive=$(readlink -f "$("${CC:-gcc}" -print-file-name=libc.a)")
+libc_sha256=$(sha256sum "$libc_archive" | cut -d ' ' -f 1)
+notice="/out/iperf3-LICENSE-${target}.txt"
+cp LICENSE "$notice"
+printf '\n=== iPerf3 build source information (linux/%s) ===\n\n' "$target" >> "$notice"
+printf 'Source: https://downloads.es.net/pub/iperf/%s\nArchive SHA-256: %s\n' "$archive" "$sha256" >> "$notice"
+printf 'Build script: controller/deps/build-iperf3.sh\nCompiler target: %s\n' "$("${CC:-gcc}" -dumpmachine)" >> "$notice"
+sh "$script_dir/write-libc-notices.sh" "$libc_archive" >> "$notice"
 ./configure --enable-static-bin --disable-shared --enable-static --disable-dependency-tracking --without-openssl --without-sctp "$@"
 make -j"$(nproc)"
+if [ "$(sha256sum "$libc_archive" | cut -d ' ' -f 1)" != "$libc_sha256" ]; then
+  echo "the packaged glibc archive changed during the iperf3 build" >&2
+  exit 1
+fi
 "${strip_cmd}" src/iperf3
 cp src/iperf3 /out/iperf3
+# The native CI artifact exports this name; the combined Docker build retains
+# the architecture-specific originals so neither runtime's provenance is lost.
+cp "$notice" /out/iperf3-LICENSE.txt
 if readelf -l /out/iperf3 | grep -q INTERP; then
   echo "iperf3 is dynamically linked" >&2
   exit 1

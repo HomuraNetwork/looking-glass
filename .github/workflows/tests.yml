@@ -113,5 +113,6 @@ jobs:
       - name: Vet & test
         working-directory: agent
         run: |
+          go generate ./internal/licenses
           go vet ./...
           go test ./...

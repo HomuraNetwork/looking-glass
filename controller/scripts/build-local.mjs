@@ -1,6 +1,7 @@
 import { build } from "esbuild";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { writeThirdPartyLicenses } from "./build-licenses.mjs";
 
 // Bundle the local runtime entry into a single file Node can run. The core
 // (../src) uses extensionless relative imports, which Node's ESM loader cannot
@@ -19,3 +20,4 @@ await build({
 });
 
 console.log(`wrote ${outfile}`);
+await writeThirdPartyLicenses();

@@ -324,10 +324,17 @@ Deleting the data directory removes the node identity and usually requires a new
 
 ```bash
 cd agent
+go generate ./internal/licenses
 CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o hlg-agent ./cmd/hlg-agent
 ```
 
 Cross-compile for both supported targets:
+
+Run the generation step above first. It collects the complete upstream notices
+for the Go runtime and the packages linked into both Linux release targets.
+The generated source is ignored by Git; release builds and Docker run this step
+automatically. `hlg-agent licenses` prints the embedded notices without requiring
+configuration, network access, or root.
 
 ```bash
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
@@ -364,4 +371,5 @@ Uninstall stops and removes the service as well as the local installation files 
 | `hlg-agent upgrade` | Check for or install an Agent update |
 | `hlg-agent uninstall` | Uninstall the Agent |
 | `hlg-agent version` | Show the version and Build ID |
+| `hlg-agent licenses` | Print HLG's MIT license and linked Go dependency/runtime notices |
 | `hlg-agent help` | Show command help |

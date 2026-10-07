@@ -3,8 +3,8 @@ name: hlg-agent
 services:
   agent:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: agent/Dockerfile
     image: hlg-agent:local
     cap_add:
       - NET_RAW

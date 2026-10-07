@@ -12,6 +12,7 @@ build/
 
 # Generated files
 controller/src/db-schema.ts
+agent/internal/licenses/notices_generated.go
 
 # Wrangler (rendered config + local state)
 controller/wrangler.jsonc

@@ -2,10 +2,12 @@
 
 FROM golang:1.27-bookworm AS build
 
-WORKDIR /src
-COPY go.mod go.sum ./
+WORKDIR /src/agent
+COPY agent/go.mod agent/go.sum ./
 RUN go mod download
-COPY . .
+COPY agent .
+COPY LICENSE /src/LICENSE
+RUN go generate ./internal/licenses
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/hlg-agent ./cmd/hlg-agent
 
 # Runtime on Alpine: packaged tools are present in the image; optional managed

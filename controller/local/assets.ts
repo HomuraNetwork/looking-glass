@@ -54,6 +54,8 @@ function contentType(path: string): string {
       return "text/css; charset=utf-8";
     case ".json":
       return "application/json; charset=utf-8";
+    case ".txt":
+      return "text/plain; charset=utf-8";
     case ".svg":
       return "image/svg+xml";
     case ".png":

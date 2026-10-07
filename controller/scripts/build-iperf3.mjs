@@ -5,6 +5,7 @@ import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { writeIperfManifest } from "./release-manifests.mjs";
+import { iperfLicensePath, writeThirdPartyLicenses } from "./build-licenses.mjs";
 
 const controllerRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = resolve(controllerRoot, "..");
@@ -15,8 +16,9 @@ function execDocker(args, options) {
   return execFileSync(docker, [...dockerPrefix, ...args], options);
 }
 
-function manifest() {
+async function manifest() {
   writeIperfManifest(outDir);
+  await writeThirdPartyLicenses({ requireIperf3: true });
   console.log(`wrote iperf3 dependency manifest (${arches.join(", ")})`);
 }
 
@@ -46,16 +48,19 @@ function buildArch(arch) {
   const id = execDocker(["create", "--platform", platform, image, "/iperf3"], { encoding: "utf8" }).trim();
   try {
     execDocker(["cp", `${id}:/iperf3`, resolve(outDir, `hlg-iperf3-linux-${arch}`)], { stdio: "inherit" });
+    const notice = iperfLicensePath(arch);
+    mkdirSync(dirname(notice), { recursive: true });
+    execDocker(["cp", `${id}:/iperf3-LICENSE.txt`, notice], { stdio: "inherit" });
   } finally {
     execDocker(["rm", "-f", id], { stdio: "ignore" });
   }
 }
 
 if (process.argv.includes("--manifest-only")) {
-  manifest();
+  await manifest();
 } else if (process.argv.includes("--all")) {
   for (const arch of arches) buildArch(arch);
-  manifest();
+  await manifest();
 } else {
   buildArch(process.env.IPERF3_ARCH || (process.arch === "x64" ? "amd64" : process.arch === "arm64" ? "arm64" : ""));
 }

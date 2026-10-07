@@ -44,6 +44,14 @@ describe("local file asset server", () => {
     expect(response.headers.get("content-type")).toContain("text/javascript");
   });
 
+  it("serves distribution license notices as readable text", async () => {
+    writeFileSync(join(root, "THIRD_PARTY_LICENSES.txt"), "Complete distribution notices");
+    const response = await get("/THIRD_PARTY_LICENSES.txt");
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+    expect(await response.text()).toBe("Complete distribution notices");
+  });
+
   it("serves extensionless files that exist (e.g. agent binaries)", async () => {
     writeFileSync(join(root, "hlg-agent-linux-amd64"), "BINARY");
     const response = await get("/hlg-agent-linux-amd64");

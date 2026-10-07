@@ -36,6 +36,11 @@ function resolveBuildId() {
 
 mkdirSync(outDir, { recursive: true });
 
+execFileSync("go", ["generate", "./internal/licenses"], {
+  cwd: agentRoot,
+  stdio: "inherit",
+});
+
 for (const target of targets) {
   const out = resolve(outDir, target.name);
   execFileSync(

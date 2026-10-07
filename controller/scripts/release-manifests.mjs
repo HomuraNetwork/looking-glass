@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { LICENSE_URL } from "./build-licenses.mjs";
 
 export const AGENT_TARGETS = ["hlg-agent-linux-amd64", "hlg-agent-linux-arm64"];
 export const IPERF_ARCHES = ["amd64", "arm64"];
@@ -19,7 +20,7 @@ export function writeIperfManifest(outDir) {
   const tools = {};
   for (const arch of IPERF_ARCHES) {
     const name = `hlg-iperf3-linux-${arch}`;
-    tools[name] = { tool: "iperf3", arch, ...digest(resolve(outDir, name)) };
+    tools[name] = { tool: "iperf3", arch, ...digest(resolve(outDir, name)), license_url: LICENSE_URL };
   }
   writeFileSync(resolve(outDir, "manifest.json"), `${JSON.stringify({ tools }, null, 2)}\n`);
 }

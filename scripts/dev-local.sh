@@ -120,7 +120,7 @@ if ! wait_for "http://localhost:$WORKER_PORT/api/public-config"; then
 fi
 
 # Build the agent so an operator can run a node's pull command immediately.
-(cd "$ROOT/agent" && go build -o "$RUN_DIR/hlg-agent" ./cmd/hlg-agent)
+(cd "$ROOT/agent" && go generate ./internal/licenses && go build -o "$RUN_DIR/hlg-agent" ./cmd/hlg-agent)
 
 cat <<EOF
 Local HLG controller is running.
