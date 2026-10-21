@@ -9,6 +9,7 @@ services:
       # lockfile, controller, frontend, and agent sources).
       context: .
       dockerfile: Dockerfile
+      pull: true
       args:
         # Build identity for the agent binaries; must be the commit that last
         # touched agent/ (see Dockerfile). Compose cannot run git, so it

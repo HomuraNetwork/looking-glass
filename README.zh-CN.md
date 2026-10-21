@@ -146,7 +146,7 @@ npx wrangler d1 create looking-glass-db
 
 Controller 的完整构建会生成 Linux `amd64` 和 `arm64` 静态 iPerf3，供缺少可用 `iperf3` 的 Agent 使用。
 
-构建脚本使用 ESnet 官方 iPerf3 3.21 源码，并固定 SHA-256。主要编译选项为：
+构建脚本使用 ESnet 官方 iPerf3 3.22 源码，并固定 SHA-256。主要编译选项为：
 
 ```text
 --enable-static-bin
@@ -175,9 +175,9 @@ pnpm build:cf
 
 ### 环境要求
 
-- Node.js 26.9 或更高版本
+- Node.js 26.12.1 或更高版本
 - pnpm 12.7
-- Go 1.26 或更高版本
+- Go 1.26.10 或更高版本（推荐 Go 1.27.3）
 - Docker 和 Docker Buildx
 - Cloudflare Account、D1 数据库，以及具有 Workers 和 D1 编辑权限的 API Token
 

@@ -30,13 +30,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 26.9.0
+          node-version: 26.12.1
           cache: pnpm
 
       - name: Setup Go (cross-language bundle verification)
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version: "1.27"
+          go-version: "1.27.3"
           cache-dependency-path: agent/go.sum
 
       - name: Install dependencies
@@ -66,10 +66,15 @@ jobs:
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Build image
-        run: docker buildx build --load -f Dockerfile -t hlg-controller:ci .
+        run: docker buildx build --pull --load -f Dockerfile -t hlg-controller:ci .
 
       - name: Verify release assets in the runtime image
         run: docker run --rm --entrypoint node -v "$PWD/controller/scripts:/verify:ro" hlg-controller:ci /verify/verify-release-artifacts.mjs /app/assets
+
+      - name: Build and smoke-test the agent image
+        run: |
+          docker buildx build --pull --load -f agent/Dockerfile -t hlg-agent:ci .
+          docker run --rm --entrypoint /usr/local/bin/hlg-agent hlg-agent:ci version
 
   iperf3:
     name: iperf3 fallback (${{ matrix.arch }})
@@ -87,7 +92,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 26.9.0
+          node-version: 26.12.1
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - name: Build and smoke-test native static iperf3
         env:
@@ -107,7 +112,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version: "1.27"
+          go-version: "1.27.3"
           cache-dependency-path: agent/go.sum
 
       - name: Vet & test

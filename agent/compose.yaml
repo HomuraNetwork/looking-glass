@@ -5,6 +5,7 @@ services:
     build:
       context: ..
       dockerfile: agent/Dockerfile
+      pull: true
     image: hlg-agent:local
     cap_add:
       - NET_RAW

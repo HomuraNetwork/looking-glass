@@ -146,7 +146,7 @@ Go to **Actions → Deploy Worker → Run workflow**. When the workflow finishes
 
 The full Controller build produces static iPerf3 binaries for Linux `amd64` and `arm64`. Agents use them when no suitable system `iperf3` is available.
 
-The build script uses the official ESnet iPerf3 3.21 source archive and pins its SHA-256 digest. Its main build options are:
+The build script uses the official ESnet iPerf3 3.22 source archive and pins its SHA-256 digest. Its main build options are:
 
 ```text
 --enable-static-bin
@@ -175,9 +175,9 @@ You can also build and deploy from your local machine without GitHub Actions.
 
 ### Requirements
 
-- Node.js 26.9 or later
+- Node.js 26.12.1 or later
 - pnpm 12.7
-- Go 1.26 or later
+- Go 1.26.10 or later (Go 1.27.3 recommended)
 - Docker with Docker Buildx
 - A Cloudflare account, D1 database, and API token with Workers and D1 edit permissions
 

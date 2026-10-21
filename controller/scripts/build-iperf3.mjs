@@ -27,7 +27,7 @@ function buildArch(arch) {
   if (!arches.includes(arch)) throw new Error(`unsupported architecture: ${arch}`);
   const image = `hlg-iperf3-${arch}:build`;
   const platform = `linux/${arch}`;
-  execDocker(["buildx", "build", "--platform", platform, "--target", "artifact", "--load", "-t", image, "-f", "controller/deps/Dockerfile", "."], { cwd: repoRoot, stdio: "inherit" });
+  execDocker(["buildx", "build", "--pull", "--platform", platform, "--target", "artifact", "--load", "-t", image, "-f", "controller/deps/Dockerfile", "."], { cwd: repoRoot, stdio: "inherit" });
   execDocker(["run", "--rm", "--platform", platform, image, "/iperf3", "--version"], { stdio: "inherit" });
   // iperf3 maps a temporary buffer file for each stream, so scratch needs /tmp.
   const server = execDocker(["run", "-d", "--rm", "--platform", platform, "--tmpfs", "/tmp", image, "/iperf3", "-s", "-p", "5201"], { encoding: "utf8" }).trim();

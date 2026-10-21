@@ -3,7 +3,7 @@
 # Build stage for the Go agent. The admin one-click install flow serves the
 # agent binaries from the controller's asset directory (/_agent/*), so the
 # image must ship them.
-FROM golang:1.27-bookworm AS agent-build
+FROM golang:1.27.3-bookworm AS agent-build
 
 
 # Build identity embedded in the binaries (and recorded in the manifest). Pass
@@ -48,7 +48,7 @@ RUN IPERF3_TARGET=amd64 sh /usr/local/bin/build-iperf3 \
     && cp /out/iperf3 /out/hlg-iperf3-linux-arm64
 
 # Build stage: bundle the frontend assets and the local runtime server.
-FROM node:26.12.0-bookworm-slim AS build
+FROM node:26.12.1-bookworm-slim AS build
 
 WORKDIR /src
 
@@ -78,7 +78,7 @@ RUN node controller/scripts/write-release-manifests.mjs \
 # Runtime stage: just Node + the built artifacts. node:sqlite is built into
 # Node (>=22.13 without the experimental flag), so there is no database
 # dependency to install.
-FROM node:26.12.0-bookworm-slim AS runtime
+FROM node:26.12.1-bookworm-slim AS runtime
 
 # Run unprivileged. The base image already provides a `node` user with
 # uid/gid 1000 — do not create another one (useradd with the same uid fails).
