@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.27-bookworm AS build
+FROM golang:1.27.3-bookworm AS build
 
 WORKDIR /src/agent
 COPY agent/go.mod agent/go.sum ./
@@ -12,9 +12,10 @@ RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/hlg-age
 
 # Runtime on Alpine: packaged tools are present in the image; optional managed
 # tools are downloaded at first init using release metadata from the controller.
-FROM alpine:3.24
+FROM alpine:3.24.2
 
-RUN apk add --no-cache \
+RUN apk upgrade --no-cache \
+	&& apk add --no-cache \
 		ca-certificates \
 		curl \
 		iperf3 \

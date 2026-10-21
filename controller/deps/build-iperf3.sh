@@ -3,8 +3,8 @@ set -eu
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
 # Pinned release and SHA-256 from https://software.es.net/iperf/news.html.
-version=3.21
-sha256=656e4405ebd620121de7ceca3eaf43a88f79ea1b857d041a6a0b1314801acdd8
+version=3.22
+sha256=1c0d0fb02c52626111d6e132db80edfbf27bbaff8bd9245df2a371dcb0b35a92
 archive="iperf-${version}.tar.gz"
 case "${IPERF3_TARGET:-$(uname -m)}" in
   amd64|x86_64) target=amd64; triple=x86_64-linux-gnu ;;
