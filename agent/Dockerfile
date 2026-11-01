@@ -12,7 +12,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/hlg-age
 
 # Runtime on Alpine: packaged tools are present in the image; optional managed
 # tools are downloaded at first init using release metadata from the controller.
-FROM alpine:3.24.2
+FROM alpine:3.24.3
 
 RUN apk upgrade --no-cache \
 	&& apk add --no-cache \
