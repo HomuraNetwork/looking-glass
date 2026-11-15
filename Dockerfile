@@ -3,7 +3,7 @@
 # Build stage for the Go agent. The admin one-click install flow serves the
 # agent binaries from the controller's asset directory (/_agent/*), so the
 # image must ship them.
-FROM golang:1.27.3-bookworm AS agent-build
+FROM golang:1.27.4-bookworm AS agent-build
 
 
 # Build identity embedded in the binaries (and recorded in the manifest). Pass
